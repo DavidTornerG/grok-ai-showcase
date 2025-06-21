@@ -1,0 +1,348 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 262.1 83.3% 57.8%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Fix white border and focus issues */
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+*:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove default browser focus styles */
+input:focus,
+textarea:focus,
+select:focus,
+button:focus,
+div:focus,
+[tabindex]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Custom focus styles for form elements only when needed */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 1px solid hsl(var(--ring)) !important;
+  outline-offset: 1px !important;
+  box-shadow: none !important;
+}
+
+/* Remove white borders from cards and components */
+.card:focus,
+.card:focus-within,
+[data-state="active"]:focus,
+[role="tabpanel"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Fix dropdown and select styling */
+select {
+  appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 16px !important;
+  padding-right: 32px !important;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure content starts at top */
+.tab-content-container {
+  min-height: 100vh;
+  padding-top: 0;
+}
+
+/* Fix any white border issues */
+div[data-state="active"],
+[role="tabpanel"],
+.tab-content-container {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove focus outlines from non-interactive elements */
+body:focus,
+main:focus,
+div:focus:not([role="button"]):not([tabindex="0"]) {
+  outline: none !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Custom styles for improved UI */
+.message-bubble {
+  @apply relative rounded-lg p-4 transition-colors;
+}
+
+.message-bubble-user {
+  @apply bg-accent/50;
+}
+
+.message-bubble-assistant {
+  @apply bg-muted;
+}
+
+.reasoning-section {
+  @apply bg-accent/70 border border-border/50 rounded-md p-3 mt-2;
+}
+
+.function-result {
+  @apply bg-accent/70 border border-primary/20 rounded-md p-3 my-2;
+}
+
+.code-block {
+  @apply bg-muted/80 border border-border/50 rounded-md p-2 overflow-x-auto text-sm font-mono;
+}
+
+/* Updated copy button styles for better visibility and consistency */
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  opacity: 0.6;
+  transition: opacity 0.15s, background-color 0.15s;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .copy-button {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.message-bubble:hover .copy-button,
+.copy-button:focus,
+.copy-button:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dark .message-bubble:hover .copy-button,
+.dark .copy-button:focus,
+.dark .copy-button:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.speed-badge-fastest {
+  @apply bg-green-600/20 text-green-400 border-green-800/50;
+}
+
+.speed-badge-fast {
+  @apply bg-yellow-600/20 text-yellow-400 border-yellow-800/50;
+}
+
+.speed-badge-average {
+  @apply bg-blue-600/20 text-blue-400 border-blue-800/50;
+}
+
+.speed-badge-slow {
+  @apply bg-red-600/20 text-red-400 border-red-800/50;
+}
+
+.model-card {
+  @apply border border-border/70 hover:border-primary/30 transition-colors rounded-lg p-4;
+}
+
+.image-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-color: var(--border-color);
+}
+
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition-property: opacity;
+  transition-duration: 200ms;
+  backdrop-filter: blur(4px);
+}
+
+/* Group hover for image overlay */
+.image-card:hover .image-overlay {
+  opacity: 1;
+}
+
+.input-container {
+  @apply flex items-center gap-2 p-3 bg-input rounded-md border border-border/70 focus-within:ring-1 focus-within:ring-ring;
+}
+
+.tab-content-container {
+  @apply mt-6 pb-12;
+}
+
+/* Enhanced scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50 transition-colors;
+}
+
+/* Better focus styles for accessibility */
+*:focus-visible {
+  @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+}
+
+/* Improved animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Better spacing standards */
+.space-xs {
+  @apply p-1;
+}
+
+.space-sm {
+  @apply p-2;
+}
+
+.space-md {
+  @apply p-4;
+}
+
+.space-lg {
+  @apply p-6;
+}
+
+.space-xl {
+  @apply p-8;
+}
