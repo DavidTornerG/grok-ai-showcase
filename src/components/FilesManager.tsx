@@ -153,7 +153,7 @@ export default function FilesManager({ files, setFiles, projects, setProjects, s
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
-  const hasAutoScrolled = useRef(false); // Track if we've already auto-scrolled
+
 
   // Get file category
   const getFileCategory = useCallback((fileType: string): FileCategory => {
@@ -193,15 +193,6 @@ export default function FilesManager({ files, setFiles, projects, setProjects, s
           );
 
           setFiles(filesWithPreviews);
-
-          // Auto-open 2nd file on initial load
-          if (!hasAutoScrolled.current && filesWithPreviews.length > 1) {
-            setTimeout(() => {
-              // Automatically open the second file
-              setSelectedFile(filesWithPreviews[1]);
-              hasAutoScrolled.current = true;
-            }, 300); // Quick delay to ensure state is ready
-          }
 
           // Save the updated files with new preview URLs back to localStorage
           if (filesWithPreviews.some(f => f.preview !== loadedFiles.find(lf => lf.id === f.id)?.preview)) {

@@ -7,7 +7,7 @@ import VoiceAI from './VoiceAI';
 import {
   Brain,
   Eye,
-  Image,
+  Sparkles,
   Zap,
   BarChart3,
   Github,
@@ -97,8 +97,8 @@ export default function Header({ activeTab, onTabChange }: HeaderProps) {
               onClick={() => onTabChange('image-gen')}
               className="flex items-center space-x-2"
             >
-              <Image className="h-4 w-4" />
-              <span>Images</span>
+              <Sparkles className="h-4 w-4" />
+              <span>Generate</span>
             </Button>
             <Button
               variant={activeTab === 'functions' ? 'secondary' : 'ghost'}

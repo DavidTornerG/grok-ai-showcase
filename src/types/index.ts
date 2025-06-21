@@ -16,7 +16,7 @@ export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
-  timestamp: Date;
+  timestamp: string; // Changed to string
   model?: string;
   reasoning?: string;
   usage?: {
@@ -41,7 +41,7 @@ export interface ImageMessage {
       detail?: 'low' | 'high';
     };
   }[];
-  timestamp: Date;
+  timestamp: string; // Changed to string
   model?: string;
 }
 
@@ -55,7 +55,7 @@ export interface SpeedBenchmark {
   timeToFirstToken: number;
   totalTime: number;
   tokensPerSecond: number;
-  timestamp: Date;
+  timestamp: string; // Changed to string
 }
 
 export interface FunctionCall {

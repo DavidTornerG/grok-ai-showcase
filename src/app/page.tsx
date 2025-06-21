@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import ChatInterface from '@/components/ChatInterface';
 import VisionInterface from '@/components/VisionInterface';
-import ImageGenerationInterface from '@/components/ImageGenerationInterface';
+import GenerationInterface from '@/components/VideoGenerationInterface';
 import FunctionCallingInterface from '@/components/FunctionCallingInterface';
 import BenchmarkInterface from '@/components/BenchmarkInterface';
 import LiveViewInterface from '@/components/LiveViewInterface';
@@ -104,7 +104,7 @@ export default function HomePage() {
       <main className="container mx-auto px-4 py-6">
         {activeTab === 'chat' && <ChatInterface />}
         {activeTab === 'live-view' && <LiveViewInterface />}
-        {activeTab === 'image-gen' && <ImageGenerationInterface />}
+        {activeTab === 'image-gen' && <GenerationInterface />}
         {activeTab === 'functions' && <FunctionCallingInterface />}
         {activeTab === 'benchmark' && <BenchmarkInterface />}
         {activeTab === 'vision' && <VisionInterface />}

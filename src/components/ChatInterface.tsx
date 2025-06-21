@@ -40,7 +40,7 @@ export default function ChatInterface() {
     prompt_tokens: number;
     completion_tokens: number;
     total_tokens: number;
-  } | null>(null);
+  } | undefined>(undefined);
   const [responseTime, setResponseTime] = useState<number | null>(null);
   const [reasoning, setReasoning] = useState<string>('');
   const [pastedImages, setPastedImages] = useState<Array<{id: string, url: string, name: string}>>([]);
@@ -54,7 +54,13 @@ export default function ChatInterface() {
     try {
       const savedMessages = localStorage.getItem(CHAT_STORAGE_KEY);
       if (savedMessages) {
-        setMessages(JSON.parse(savedMessages));
+        const parsedMessages = JSON.parse(savedMessages);
+        // Ensure timestamps are Date objects for display
+        const messagesWithDates = parsedMessages.map((msg: ChatMessage) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+        }));
+        setMessages(messagesWithDates);
       }
 
       const savedModel = localStorage.getItem(MODEL_STORAGE_KEY);
@@ -106,7 +112,7 @@ export default function ChatInterface() {
     setMessages([]);
     setStreamingContent('');
     setReasoning('');
-    setCurrentUsage(null);
+    setCurrentUsage(undefined);
     setResponseTime(null);
     setPastedImages([]);
 
@@ -126,12 +132,21 @@ export default function ChatInterface() {
     try {
       const result = await processClipboardImage(file, 2 * 1024 * 1024, 800, 0.8);
       const imageId = Date.now().toString();
-      
-      setPastedImages(prev => [...prev, {
-        id: imageId,
-        url: result.url,
-        name: file.name || `pasted-image-${imageId}.jpg`
-      }]);
+
+      // Convert blob URL to base64 for persistence
+      const response = await fetch(result.url);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        const base64data = reader.result as string;
+        setPastedImages(prev => [...prev, {
+          id: imageId,
+          url: base64data,
+          name: file.name || `pasted-image-${imageId}.jpg`
+        }]);
+        URL.revokeObjectURL(result.url); // Clean up blob URL
+      };
 
       toast.success(`Image pasted! ${Math.round(result.compressedSize / 1024)}KB`);
     } catch (error) {
@@ -203,49 +218,24 @@ export default function ChatInterface() {
     // Build the message content
     let messageContent: any = input.trim();
     
-    // If we have images, convert blob URLs to base64
+    // If we have images, the URLs are already base64
     if (hasImages) {
-      try {
-        // Convert each blob URL to base64
-        const imagePromises = pastedImages.map(async (img) => {
-          const response = await fetch(img.url);
-          const blob = await response.blob();
-          
-          return new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              const base64 = reader.result as string;
-              resolve(base64);
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-          });
-        });
-        
-        const base64Images = await Promise.all(imagePromises);
-        
-        messageContent = [
-          { type: 'text', text: input.trim() || 'What can you tell me about these images?' },
-          ...base64Images.map(base64 => ({
-            type: 'image_url',
-            image_url: { url: base64 }
-          }))
-        ];
-      } catch (error) {
-        console.error('Failed to convert images:', error);
-        toast.error('Failed to process images. Please try again.');
-        setIsLoading(false);
-        return;
-      }
+      messageContent = [
+        { type: 'text', text: input.trim() || 'What can you tell me about these images?' },
+        ...pastedImages.map(img => ({
+          type: 'image_url',
+          image_url: { url: img.url }
+        }))
+      ];
     }
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       role: 'user',
       content: hasImages ? input.trim() || 'What can you tell me about these images?' : input.trim(),
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       images: hasImages ? pastedImages.map(img => ({
-        url: img.url,
+        url: img.url, // This will be a base64 URL
         name: img.name
       })) : undefined
     };
@@ -269,15 +259,7 @@ export default function ChatInterface() {
       // TODO: Implement multi-image support
       if (hasImages && pastedImages.length > 0) {
         // Use vision endpoint for single image
-        const firstImage = await (async () => {
-          const response = await fetch(pastedImages[0].url);
-          const blob = await response.blob();
-          return new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(blob);
-          });
-        })();
+        const firstImage = pastedImages[0].url; // Already base64
 
         const response = await fetch('/api/vision', {
           method: 'POST',
@@ -303,7 +285,7 @@ export default function ChatInterface() {
           id: Date.now().toString(),
           role: 'assistant',
           content: data.choices[0].message.content,
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
           model: modelToUse,
           usage: data.usage
         };
@@ -381,7 +363,7 @@ export default function ChatInterface() {
           id: Date.now().toString(),
           role: 'assistant',
           content: content,
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
           model: selectedModel,
           reasoning: reasoningContent || undefined,
           usage: currentUsage
@@ -493,7 +475,7 @@ export default function ChatInterface() {
                           </Badge>
                         )}
                         <span className="text-xs text-muted-foreground">
-                          {message.timestamp.toLocaleTimeString()}
+                          {new Date(message.timestamp).toLocaleTimeString()}
                         </span>
                       </div>
 
